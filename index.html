@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nguyen Gia Phuc | Obito</title>
+  <meta property="og:title" content="Nguyen Gia Phuc | Obito">
+  <meta property="og:site_name" content="nguyengiaphuc.dev">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#080810">
+  <meta property="og:image" content="https://i.postimg.cc/0QvPx86z/7b844a5ee919a8cf18ad0b769019b54a.gif">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --red:#ff2244;--glow:rgba(255,34,68,.55);
+  --purple:#9933ff;--blue:#44aaff;--cyan:#00eeff;
+  --bg:#080810;--card:rgba(255,255,255,.025);
+  --border:rgba(255,34,68,.18);--text:#dde0f0;--muted:#55557a;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Share Tech Mono',monospace;overflow-x:hidden;cursor:crosshair}
+
+/* ── CANVAS ── */
+#cvs-bg{position:fixed;inset:0;pointer-events:none;z-index:1}
+
+/* ── POST-FX ── */
+body::after{content:'';position:fixed;inset:0;z-index:7;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.055) 2px,rgba(0,0,0,.055) 4px)}
+body::before{content:'';position:fixed;inset:0;z-index:8;pointer-events:none;
+  background:radial-gradient(ellipse at center,transparent 35%,rgba(0,0,0,.75) 100%)}
+
+/* ── ANIME LAYER ── */
+#anime-layer{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.agif{position:absolute;object-fit:cover;border-radius:4px;opacity:0;
+  border:1px solid rgba(255,34,68,.1);filter:brightness(.5) saturate(1.4);
+  transition:opacity 2.2s ease;
+  mask-image:radial-gradient(ellipse at center,black 45%,transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse at center,black 45%,transparent 100%)}
+.agif.show{opacity:.38}
+
+/* ── PAGE ── */
+.page{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:60px 20px 120px;
+  animation:pageIn .9s ease-out both}
+@keyframes pageIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.lbl{font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:6px;color:var(--red);
+  margin-bottom:36px;animation:fup .6s .3s both}
+
+/* ══════════ AVATAR & RINGS ══════════ */
+.av-wrap{position:relative;margin-bottom:32px;animation:fup .6s .4s both}
+.av-ring{position:relative;width:155px;height:155px}
+
+/* Ring 1 – red, fast */
+.av-ring::before{
+  content:'';position:absolute;border-radius:50%;
+  inset:-10px;border:2.5px solid transparent;
+  border-top-color:var(--red);border-right-color:var(--red);
+  animation:spin 2.2s linear infinite;
+  filter:drop-shadow(0 0 6px var(--red));
+}
+/* Ring 2 – purple, reverse */
+.av-ring::after{
+  content:'';position:absolute;border-radius:50%;
+  inset:-22px;border:1.5px solid transparent;
+  border-bottom-color:rgba(153,51,255,.75);border-left-color:rgba(153,51,255,.75);
+  animation:spin 4.5s linear infinite reverse;
+  filter:drop-shadow(0 0 4px #9933ff);
+}
+/* Ring 3 – cyan, slow */
+.r3{position:absolute;inset:-34px;border-radius:50%;border:1px solid transparent;
+  border-top-color:rgba(0,238,255,.5);border-right-color:rgba(0,238,255,.5);
+  animation:spin 8s linear infinite;
+  filter:drop-shadow(0 0 3px var(--cyan));
+}
+/* Ring 4 – dashed glow */
+.r4{position:absolute;inset:-46px;border-radius:50%;
+  border:1px dashed rgba(255,34,68,.25);
+  animation:spin 14s linear infinite reverse}
+
+/* Pulse rings */
+.rp1{position:absolute;inset:0;border-radius:50%;
+  border:2px solid rgba(255,34,68,.6);
+  animation:pulseRing 2.4s ease-out infinite}
+.rp2{position:absolute;inset:0;border-radius:50%;
+  border:2px solid rgba(153,51,255,.4);
+  animation:pulseRing 2.4s ease-out infinite .9s}
+.rp3{position:absolute;inset:0;border-radius:50%;
+  border:1px solid rgba(0,238,255,.3);
+  animation:pulseRing 2.4s ease-out infinite 1.8s}
+
+/* Orbit 1 – red dot */
+.ob1{position:absolute;inset:-42px;border-radius:50%;animation:spin 3.2s linear infinite}
+.ob1::before{content:'';position:absolute;top:3px;left:50%;
+  width:8px;height:8px;border-radius:50%;transform:translateX(-50%);
+  background:var(--red);box-shadow:0 0 10px var(--red),0 0 22px var(--glow),0 0 40px rgba(255,34,68,.2)}
+
+/* Orbit 2 – purple dot */
+.ob2{position:absolute;inset:-50px;border-radius:50%;animation:spin 5.5s linear infinite reverse 1s}
+.ob2::before{content:'';position:absolute;bottom:4px;left:50%;
+  width:6px;height:6px;border-radius:50%;transform:translateX(-50%);
+  background:var(--purple);box-shadow:0 0 8px var(--purple),0 0 18px rgba(153,51,255,.5)}
+
+/* Orbit 3 – cyan dot */
+.ob3{position:absolute;inset:-58px;border-radius:50%;animation:spin 9s linear infinite .5s}
+.ob3::before{content:'';position:absolute;top:50%;right:3px;
+  width:5px;height:5px;border-radius:50%;transform:translateY(-50%);
+  background:var(--cyan);box-shadow:0 0 7px var(--cyan),0 0 15px rgba(0,238,255,.4)}
+
+/* Scanning beam */
+.scan{position:absolute;inset:-12px;border-radius:50%;
+  background:conic-gradient(from 0deg,transparent 0%,rgba(255,34,68,.08) 10%,transparent 20%);
+  animation:spin 3s linear infinite}
+
+/* Avatar glow base */
+.av-glow{position:absolute;inset:-65px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,34,68,.08) 0%,rgba(153,51,255,.05) 40%,transparent 70%);
+  animation:glowPulse 3s ease-in-out infinite}
+
+/* Avatar image */
+.av-ring img{
+  position:relative;z-index:3;
+  width:100%;height:100%;border-radius:50%;object-fit:cover;
+  border:2.5px solid rgba(255,34,68,.45);display:block;
+  box-shadow:0 0 25px rgba(255,34,68,.35),0 0 50px rgba(255,34,68,.12),inset 0 0 20px rgba(255,34,68,.05);
+}
+.sdot{position:absolute;bottom:11px;right:11px;z-index:5;
+  width:13px;height:13px;background:#43b581;border-radius:50%;
+  border:2px solid var(--bg);box-shadow:0 0 8px #43b581;animation:pg 2s infinite}
+
+/* ── TEXT ── */
+.name{font-family:'Orbitron',sans-serif;font-size:clamp(22px,5vw,33px);font-weight:900;
+  letter-spacing:2px;text-align:center;animation:fup .6s .6s both}
+.name .r{color:var(--red);text-shadow:0 0 22px var(--glow),0 0 50px rgba(255,34,68,.2)}
+.name .p{color:var(--muted);margin:0 5px}
+.handle{font-size:12px;color:var(--muted);letter-spacing:3px;margin-top:8px;margin-bottom:20px;animation:fup .6s .7s both}
+.bio{font-size:12px;color:rgba(200,200,240,.48);letter-spacing:1.5px;text-align:center;
+  max-width:340px;min-height:18px;margin-bottom:32px;animation:fup .6s .8s both}
+.cb{color:var(--red);animation:blink 1s step-end infinite}
+.divl{width:90px;height:1px;background:linear-gradient(90deg,transparent,var(--red),transparent);
+  margin-bottom:32px;animation:fup .6s .85s both}
+
+/* ── LINKS ── */
+.links{display:flex;flex-direction:column;gap:11px;width:100%;max-width:315px;animation:fup .6s .9s both}
+.lb{position:relative;display:flex;align-items:center;gap:12px;padding:13px 18px;
+  background:var(--card);border:1px solid var(--border);border-radius:3px;
+  text-decoration:none;color:var(--text);font-family:'Share Tech Mono',monospace;
+  font-size:13px;letter-spacing:1px;overflow:hidden;
+  transition:border-color .25s,color .25s,transform .25s,box-shadow .25s}
+.lb::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:var(--red);transform:scaleY(0);transition:transform .25s}
+.lb:hover::before{transform:scaleY(1)}
+.lb:hover{border-color:var(--red);color:#fff;transform:translateX(5px);box-shadow:0 0 22px rgba(255,34,68,.15)}
+.lb .ic{width:20px;text-align:center;font-size:16px}
+.lb .tx{flex:1}
+.lb .ar{font-size:11px;color:var(--muted);transition:color .25s,transform .25s}
+.lb:hover .ar{color:var(--red);transform:translateX(3px)}
+.footer{margin-top:46px;font-size:9px;color:rgba(70,70,100,.35);letter-spacing:3px;text-align:center;animation:fup .6s 1s both}
+
+/* ── MUSIC BAR ── */
+#mbar{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:20;
+  display:flex;align-items:center;gap:11px;
+  background:rgba(8,8,16,.92);border:1px solid var(--border);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  padding:9px 16px;border-radius:50px;
+  min-width:250px;max-width:370px;
+  animation:fup .6s 1.1s both;
+  box-shadow:0 0 30px rgba(255,34,68,.08)}
+#mcov{width:32px;height:32px;border-radius:50%;object-fit:cover;
+  border:1px solid var(--border);flex-shrink:0;animation:spin 8s linear infinite paused}
+#mcov.spin{animation-play-state:running}
+#mbtn{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);
+  background:rgba(255,34,68,.12);color:var(--red);font-size:11px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;transition:background .2s,box-shadow .2s}
+#mbtn:hover{background:rgba(255,34,68,.28);box-shadow:0 0 12px var(--glow)}
+.mi{flex:1;min-width:0}
+.mt{font-size:11px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ma{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mbars{display:flex;align-items:flex-end;gap:2px;height:18px;flex-shrink:0}
+.mb{width:3px;background:var(--red);border-radius:2px}
+.mb:nth-child(1){animation:mb1 .7s ease-in-out infinite alternate paused;height:4px}
+.mb:nth-child(2){animation:mb2 .5s ease-in-out infinite alternate paused;height:8px}
+.mb:nth-child(3){animation:mb3 .9s ease-in-out infinite alternate paused;height:5px}
+.mb:nth-child(4){animation:mb4 .6s ease-in-out infinite alternate paused;height:12px}
+.mb.p{animation-play-state:running!important}
+
+/* ── CURSOR TRAIL ── */
+.tr{position:fixed;border-radius:50%;background:var(--red);pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+
+/* ── KEYFRAMES ── */
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blink{50%{opacity:0}}
+@keyframes pg{0%,100%{box-shadow:0 0 6px #43b581}50%{box-shadow:0 0 16px #43b581}}
+@keyframes fup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes mb1{from{height:4px}to{height:16px}}
+@keyframes mb2{from{height:12px}to{height:5px}}
+@keyframes mb3{from{height:6px}to{height:18px}}
+@keyframes mb4{from{height:16px}to{height:4px}}
+@keyframes pulseRing{
+  0%{transform:scale(1);opacity:.7}
+  100%{transform:scale(2.2);opacity:0}
+}
+@keyframes glowPulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}
+@media(max-width:420px){.name{font-size:19px}.av-ring{width:130px;height:130px}}
+</style>
+</head>
+<body>
+
+<!-- ── CANVAS ── -->
+<canvas id="cvs-bg"></canvas>
+
+<!-- ── ANIME LAYER ── -->
+<div id="anime-layer"></div>
+
+<!-- ── MAIN PAGE ── -->
+<div class="page" id="page">
+  <div class="lbl">Xin Chào Mọi Người Mình Là Nguyễn Gia Phúc</div>
+
+  <div class="av-wrap">
+    <div class="av-ring">
+      <!-- Extra rings -->
+      <div class="r3"></div>
+      <div class="r4"></div>
+      <!-- Pulse waves -->
+      <div class="rp1"></div>
+      <div class="rp2"></div>
+      <div class="rp3"></div>
+      <!-- Orbiting dots -->
+      <div class="ob1"></div>
+      <div class="ob2"></div>
+      <div class="ob3"></div>
+      <!-- Scanning beam -->
+      <div class="scan"></div>
+      <!-- Glow base -->
+      <div class="av-glow"></div>
+      <!-- GIF Avatar -->
+      <img src="https://i.postimg.cc/0QvPx86z/7b844a5ee919a8cf18ad0b769019b54a.gif" alt="Phuc" crossorigin="anonymous">
+      <div class="sdot"></div>
+    </div>
+  </div>
+
+  <h1 class="name"><span class="r">Nguyen Gia Phuc</span><span class="p">|</span>Obito</h1>
+  <div class="handle">@nguyengiaphucxobito</div>
+  <div class="bio" id="bio"></div>
+  <div class="divl"></div>
+
+  <div class="links">
+    <a class="lb" href="https://www.facebook.com/nguyengiaphuczzz" target="_blank" rel="noopener">
+      <span class="ic">FB:</span><span class="tx">Facebook</span><span class="ar">→</span>
+    </a>
+  </div>
+
+  <div class="footer">NGUYEN GIA PHUC © 2006 — OBITO</div>
+</div>
+
+<!-- ── MUSIC BAR ── -->
+<div id="mbar">
+  <img id="mcov" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="">
+  <div id="mbtn" onclick="toggleMusic()">▶</div>
+  <div class="mi">
+    <div class="mt" id="mtt">Đang Loading nhạc...</div>
+    <div class="ma" id="mat">Nhạc Remix 2026</div>
+  </div>
+  <div class="mbars">
+    <div class="mb"></div><div class="mb"></div>
+    <div class="mb"></div><div class="mb"></div>
+  </div>
+</div>
+
+<audio id="aud" preload="auto"></audio>
+
+<script>
+/* ════════════ TYPEWRITER ════════════ */
+const LINES=['Python Developer // Tool Builder','Obfuscation & Encryption Specialist','Termux  •  Android  •  Open Source'];
+let li=0,ci=0,del=false,w=0;
+const bioEl=document.getElementById('bio');
+function type(){
+  if(w>0){w--;return setTimeout(type,80)}
+  const l=LINES[li];
+  if(!del){ci++;bioEl.innerHTML=l.slice(0,ci)+'<span class="cb">_</span>';
+    if(ci===l.length){del=true;w=30}setTimeout(type,60)}
+  else{ci--;bioEl.innerHTML=l.slice(0,ci)+'<span class="cb">_</span>';
+    if(ci===0){del=false;li=(li+1)%LINES.length;w=6}setTimeout(type,28)}
+}
+setTimeout(type,900);
+
+/* ════════════ CANVAS: PARTICLES + SNOW + SHOOTING STARS ════════════ */
+const cvsBg=document.getElementById('cvs-bg'),ctxBg=cvsBg.getContext('2d');
+let W,H;
+function rsz(){W=cvsBg.width=innerWidth;H=cvsBg.height=innerHeight}
+rsz();window.addEventListener('resize',rsz);
+
+/* -- Particles -- */
+const PTS=Array.from({length:70},()=>({
+  x:Math.random()*2000,y:Math.random()*1200,
+  vx:(Math.random()-.5)*.36,vy:(Math.random()-.5)*.36,
+  r:Math.random()*1.3+.3,a:Math.random()*.4+.08,
+  red:Math.random()<.18
+}));
+
+/* -- Snowflakes -- */
+const SNOW=Array.from({length:170},()=>({
+  x:Math.random()*1920,y:Math.random()*1080,
+  r:Math.random()*2.2+.4,
+  vy:Math.random()*.7+.25,
+  vx:(Math.random()-.5)*.25,
+  a:Math.random()*.5+.12,
+  ang:Math.random()*Math.PI*2,
+  angV:(Math.random()-.5)*.012,
+  big:Math.random()>.7,
+  twinkT:Math.random()*6.28,
+  twinkS:Math.random()*.025+.008,
+}));
+
+/* -- Shooting Stars -- */
+const STARS=[];
+function spawnStar(){
+  const edge=Math.random()<.5;
+  STARS.push({
+    x:edge?0:Math.random()*W*.6,
+    y:edge?Math.random()*H*.4:0,
+    len:Math.random()*130+60,
+    speed:Math.random()*9+6,
+    angle:Math.PI*.22+Math.random()*.18,
+    a:1,trail:[]
+  });
+}
+setInterval(()=>{if(Math.random()<.6)spawnStar()},2200);
+
+function drawAll(){
+  ctxBg.clearRect(0,0,W,H);
+
+  /* nebula glow */
+  const n1=ctxBg.createRadialGradient(W*.15,H*.28,0,W*.15,H*.28,W*.45);
+  n1.addColorStop(0,'rgba(160,10,35,.07)');n1.addColorStop(1,'transparent');
+  ctxBg.fillStyle=n1;ctxBg.fillRect(0,0,W,H);
+  const n2=ctxBg.createRadialGradient(W*.82,H*.7,0,W*.82,H*.7,W*.4);
+  n2.addColorStop(0,'rgba(60,20,120,.08)');n2.addColorStop(1,'transparent');
+  ctxBg.fillStyle=n2;ctxBg.fillRect(0,0,W,H);
+
+  /* particles */
+  for(const p of PTS){
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+    ctxBg.beginPath();ctxBg.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctxBg.fillStyle=p.red?`rgba(255,34,68,${p.a})`:`rgba(150,155,220,${p.a})`;
+    ctxBg.fill();
+  }
+  /* particle connections */
+  for(let i=0;i<PTS.length;i++)for(let j=i+1;j<PTS.length;j++){
+    const dx=PTS[i].x-PTS[j].x,dy=PTS[i].y-PTS[j].y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<82){
+      ctxBg.beginPath();ctxBg.moveTo(PTS[i].x,PTS[i].y);ctxBg.lineTo(PTS[j].x,PTS[j].y);
+      ctxBg.strokeStyle=`rgba(255,34,68,${.055*(1-d/82)})`;
+      ctxBg.lineWidth=.5;ctxBg.stroke();
+    }
+  }
+
+  /* snow */
+  for(const s of SNOW){
+    s.ang+=s.angV;
+    s.x+=s.vx+Math.sin(s.ang)*.18;
+    s.y+=s.vy;
+    if(s.y>H+8){s.y=-8;s.x=Math.random()*W}
+    if(s.x<-8)s.x=W+8;if(s.x>W+8)s.x=-8;
+    s.twinkT+=s.twinkS;
+    const alpha=s.a*(.65+.35*Math.sin(s.twinkT));
+    ctxBg.save();
+    ctxBg.globalAlpha=alpha;
+    if(s.big&&s.r>1.5){
+      /* snowflake cross shape */
+      ctxBg.strokeStyle=`rgba(195,215,255,${alpha})`;
+      ctxBg.lineWidth=.7;
+      for(let k=0;k<3;k++){
+        ctxBg.save();ctxBg.translate(s.x,s.y);ctxBg.rotate(s.ang+k*Math.PI/3);
+        ctxBg.beginPath();ctxBg.moveTo(-s.r*1.7,0);ctxBg.lineTo(s.r*1.7,0);ctxBg.stroke();
+        ctxBg.restore();
+      }
+      ctxBg.fillStyle=`rgba(220,235,255,${alpha})`;
+      ctxBg.beginPath();ctxBg.arc(s.x,s.y,s.r*.45,0,Math.PI*2);ctxBg.fill();
+    } else {
+      ctxBg.fillStyle=`rgba(210,225,255,${alpha})`;
+      ctxBg.shadowColor='rgba(180,210,255,.5)';ctxBg.shadowBlur=3;
+      ctxBg.beginPath();ctxBg.arc(s.x,s.y,s.r,0,Math.PI*2);ctxBg.fill();
+    }
+    ctxBg.restore();
+  }
+
+  /* shooting stars */
+  for(let i=STARS.length-1;i>=0;i--){
+    const s=STARS[i];
+    s.trail.push({x:s.x,y:s.y});
+    if(s.trail.length>22)s.trail.shift();
+    s.x+=Math.cos(s.angle)*s.speed;
+    s.y+=Math.sin(s.angle)*s.speed;
+    s.a-=.025;
+    if(s.a<=0||s.x>W+20||s.y>H+20){STARS.splice(i,1);continue}
+    /* draw trail */
+    ctxBg.save();
+    for(let k=1;k<s.trail.length;k++){
+      const prog=k/s.trail.length;
+      ctxBg.strokeStyle=`rgba(255,245,200,${s.a*prog*.9})`;
+      ctxBg.lineWidth=prog*2.2;
+      ctxBg.shadowColor='rgba(255,245,200,.6)';ctxBg.shadowBlur=6;
+      ctxBg.beginPath();
+      ctxBg.moveTo(s.trail[k-1].x,s.trail[k-1].y);
+      ctxBg.lineTo(s.trail[k].x,s.trail[k].y);
+      ctxBg.stroke();
+    }
+    /* head glow */
+    const head=ctxBg.createRadialGradient(s.x,s.y,0,s.x,s.y,5);
+    head.addColorStop(0,`rgba(255,250,220,${s.a})`);head.addColorStop(1,'transparent');
+    ctxBg.fillStyle=head;ctxBg.beginPath();ctxBg.arc(s.x,s.y,5,0,Math.PI*2);ctxBg.fill();
+    ctxBg.restore();
+  }
+
+  requestAnimationFrame(drawAll);
+}
+drawAll();
+
+/* ════════════ ANIME IMAGES ════════════ */
+const SLOTS=[
+  {x:'2%',y:'8%',s:130},{x:'1%',y:'48%',s:120},{x:'3%',y:'80%',s:110},
+  {x:'81%',y:'6%',s:130},{x:'83%',y:'48%',s:120},{x:'80%',y:'78%',s:115},
+];
+let gifEls=[];
+function placeImgs(urls){
+  const lay=document.getElementById('anime-layer');
+  lay.innerHTML='';gifEls=[];
+  urls.forEach((url,i)=>{
+    if(i>=SLOTS.length)return;
+    const s=SLOTS[i];
+    const img=document.createElement('img');
+    img.className='agif';
+    img.style.cssText=`left:${s.x};top:${s.y};width:${s.s}px;height:${s.s}px`;
+    img.src=url;lay.appendChild(img);gifEls.push(img);
+    setTimeout(()=>img.classList.add('show'),300+i*350);
+  });
+}
+async function loadImages(){
+  const sources=[
+    ()=>fetch('https://nekos.best/api/v2/neko?amount=6').then(r=>r.json()).then(d=>d.results.map(x=>x.url)),
+    ()=>fetch('https://nekos.best/api/v2/kitsune?amount=6').then(r=>r.json()).then(d=>d.results.map(x=>x.url)),
+    ()=>Promise.all(Array.from({length:6},()=>fetch('https://api.waifu.pics/sfw/waifu').then(r=>r.json()).then(d=>d.url))),
+  ];
+  for(const src of sources){
+    try{const urls=await src();if(urls&&urls.length>=3){placeImgs(urls.filter(Boolean));break}}catch(e){}
+  }
+  setTimeout(async function refresh(){
+    gifEls.forEach(g=>g.classList.remove('show'));
+    await new Promise(r=>setTimeout(r,2200));
+    await loadImages();
+  },20000);
+}
+loadImages();
+
+/* ════════════ MUSIC — Vietnamese Remix 2026 ════════════ */
+const aud=document.getElementById('aud');
+const mbtn=document.getElementById('mbtn');
+const mtt=document.getElementById('mtt');
+const mat=document.getElementById('mat');
+const mcov=document.getElementById('mcov');
+const mbs=document.querySelectorAll('.mb');
+let playlist=[],pidx=0,isPlaying=false,unlocked=false;
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+/* Fallback — popular Vietnamese remix track names with placeholder audio */
+const FALLBACK=[
+  {title:'Đừng Làm Trái Tim Anh Đau Remix',artist:'Trung Hiếu Remix',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'},
+  {title:'Yêu Một Người Có Lẽ (Remix 2026)',artist:'NhacRemixViet',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'},
+  {title:'Tình Yêu Màu Nắng Remix',artist:'DJ Mix Official',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'},
+  {title:'Chạy Ngay Đi Remix 2026',artist:'Việt Mix Hot',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3'},
+  {title:'Hoa Nở Không Màu Remix',artist:'Remix Việt Nam',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3'},
+  {title:'Nhạc Remix Đặc Sắc 2026',artist:'DJ Trung',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3'},
+];
+
+/* Search Deezer for Vietnamese remix */
+async function fetchDeezer(query){
+  const apiUrl=`https://api.deezer.com/search/track?q=${encodeURIComponent(query)}&order=RANKING&limit=20`;
+  const PROXIES=['https://corsproxy.io/?','https://api.allorigins.win/raw?url='];
+  for(const px of PROXIES){
+    try{
+      const res=await fetch(px+encodeURIComponent(apiUrl),{signal:AbortSignal.timeout(6000)});
+      if(!res.ok)continue;
+      const d=await res.json();
+      if(!d.data?.length)continue;
+      return d.data.filter(t=>t.preview).map(t=>({
+        title:t.title_short||t.title,
+        artist:t.artist.name,
+        url:t.preview,
+        cover:t.album?.cover_small
+      }));
+    }catch(e){}
+  }
+  return [];
+}
+
+async function startMusic(){
+  mtt.textContent='🔍 Đang tìm nhạc Việt...';
+  let tracks=[];
+  /* Try multiple Vietnamese remix queries */
+  const QUERIES=['nhac remix viet 2026','viet remix hay nhat','nhac tre remix 2026','remix viet nam 2026'];
+  for(const q of QUERIES){
+    if(tracks.length>=12)break;
+    const res=await fetchDeezer(q);
+    tracks=[...tracks,...res];
+  }
+  /* Deduplicate by url */
+  const seen=new Set();
+  tracks=tracks.filter(t=>{if(seen.has(t.url))return false;seen.add(t.url);return true});
+  playlist=shuffle(tracks.length>=4?tracks:FALLBACK);
+  attemptPlay(0);
+}
+
+function setTrackUI(t){
+  mtt.textContent=t.title;
+  mat.textContent=t.artist;
+  if(t.cover&&t.cover.length>5&&!t.cover.includes('1x1'))mcov.src=t.cover;
+}
+
+function setPlaying(v){
+  isPlaying=v;mbtn.textContent=v?'⏸':'▶';
+  if(v){mcov.classList.add('spin');mbs.forEach(b=>b.classList.add('p'))}
+  else{mcov.classList.remove('spin');mbs.forEach(b=>b.classList.remove('p'))}
+}
+
+function attemptPlay(idx){
+  if(!playlist.length)return;
+  pidx=((idx%playlist.length)+playlist.length)%playlist.length;
+  const t=playlist[pidx];
+  aud.src=t.url;aud.volume=.62;
+  setTrackUI(t);
+  aud.play().then(()=>{setPlaying(true);unlocked=true}).catch(()=>{
+    setPlaying(false);
+    mat.textContent='🔴 Chạm màn hình để bật nhạc';
+    /* Wait for first touch/click */
+    const unlock=()=>{
+      if(unlocked)return;
+      aud.play().then(()=>{setPlaying(true);unlocked=true;mat.textContent=t.artist}).catch(()=>{});
+    };
+    document.addEventListener('click',unlock,{once:true});
+    document.addEventListener('touchstart',unlock,{once:true});
+  });
+}
+
+aud.addEventListener('ended',()=>attemptPlay(pidx+1));
+
+function toggleMusic(){
+  if(!playlist.length)return;
+  if(isPlaying){aud.pause();setPlaying(false)}
+  else{aud.play().then(()=>{setPlaying(true);unlocked=true}).catch(()=>{})}
+}
+
+/* Start music immediately */
+startMusic();
+
+/* ════════════ CURSOR TRAIL ════════════ */
+const TN=10,tels=Array.from({length:TN},(_,i)=>{
+  const d=document.createElement('div');d.className='tr';
+  const s=5-i*.35;d.style.width=s+'px';d.style.height=s+'px';
+  document.body.appendChild(d);return{el:d,x:0,y:0};
+});
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function tloop(){
+  let px=mx,py=my;
+  tels.forEach((t,i)=>{
+    const lx=t.x,ly=t.y;t.x=px;t.y=py;
+    t.el.style.left=lx+'px';t.el.style.top=ly+'px';
+    t.el.style.opacity=((TN-i)/TN)*.65;
+    px=lx;py=ly;
+  });
+  requestAnimationFrame(tloop);
+})();
+</script>
+</body>
+</html>
+
