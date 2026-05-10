@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nguyen Gia Phuc | Obito</title>
+  <meta property="og:title" content="Nguyen Gia Phuc | Obito">
+  <meta property="og:site_name" content="nguyengiaphuc.dev">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#080810">
+  <meta property="og:image" content="https://i.postimg.cc/0QvPx86z/7b844a5ee919a8cf18ad0b769019b54a.gif">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --blood:#8b0012;--blood-glow:rgba(139,0,18,.75);
+  --dark-red:#cc0022;--void:#3d0066;--void-glow:rgba(61,0,102,.65);
+  --corrupt:#5a0090;--toxic-green:rgba(0,220,50,.22);
+  --red:#ff2244;--glow:rgba(255,34,68,.5);
+  --bg:#080810;--card:rgba(255,255,255,.025);
+  --border:rgba(139,0,18,.22);--text:#dde0f0;--muted:#55557a;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);
+  font-family:'Share Tech Mono',monospace;overflow-x:hidden;cursor:crosshair}
+
+#cvs-bg{position:fixed;inset:0;pointer-events:none;z-index:1}
+
+/* Reduced vignette → images more visible */
+body::after{content:'';position:fixed;inset:0;z-index:7;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.035) 2px,rgba(0,0,0,.035) 4px)}
+body::before{content:'';position:fixed;inset:0;z-index:8;pointer-events:none;
+  background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.52) 100%)}
+
+/* ═══ ANIME LAYER ═══ */
+#anime-layer{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.agif{position:absolute;object-fit:cover;border-radius:4px;opacity:0;
+  border:1px solid rgba(139,0,18,.18);
+  filter:brightness(.58) saturate(1.5);
+  transition:opacity 2.4s ease;
+  mask-image:radial-gradient(ellipse at center,black 52%,transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse at center,black 52%,transparent 100%)}
+.agif.show{opacity:.55}
+
+/* ═══ PAGE ═══ */
+.page{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:60px 20px 120px;
+  animation:pageIn .9s ease-out both}
+@keyframes pageIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.lbl{font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:6px;
+  color:var(--blood);margin-bottom:36px;animation:fup .6s .3s both;
+  text-shadow:0 0 12px var(--blood-glow)}
+
+/* ════════════════════════════════════════════
+   DARK SINISTER RING SYSTEM
+════════════════════════════════════════════ */
+.av-wrap{position:relative;margin-bottom:32px;
+  animation:fup .6s .4s both, avatarGlitch 14s infinite 5s}
+.av-ring{position:relative;width:155px;height:155px}
+
+/* Ring 1 — Inner Blood Seal (conic segmented, forward) */
+.av-ring::before{
+  content:'';position:absolute;inset:-13px;border-radius:50%;
+  background:conic-gradient(
+    rgba(139,0,18,.98) 0deg 14deg,   transparent 14deg 48deg,
+    rgba(74,0,128,.92) 48deg 62deg,  transparent 62deg 96deg,
+    rgba(139,0,18,.98) 96deg 110deg, transparent 110deg 144deg,
+    rgba(74,0,128,.92) 144deg 158deg,transparent 158deg 192deg,
+    rgba(139,0,18,.98) 192deg 206deg,transparent 206deg 240deg,
+    rgba(74,0,128,.92) 240deg 254deg,transparent 254deg 288deg,
+    rgba(139,0,18,.98) 288deg 302deg,transparent 302deg 336deg,
+    rgba(74,0,128,.92) 336deg 350deg,transparent 350deg 360deg
+  );
+  -webkit-mask:radial-gradient(circle,transparent 83.5%,black 84.5%);
+  mask:radial-gradient(circle,transparent 83.5%,black 84.5%);
+  animation:dkSpin 3s linear infinite;
+  filter:drop-shadow(0 0 7px rgba(139,0,18,.9)) drop-shadow(0 0 16px rgba(74,0,128,.45))}
+
+/* Ring 2 — Outer Void Shards (conic segmented, reversed, thin) */
+.av-ring::after{
+  content:'';position:absolute;inset:-27px;border-radius:50%;
+  background:conic-gradient(
+    rgba(61,0,102,.85) 0deg 7deg,   transparent 7deg 37deg,
+    rgba(120,0,18,.75) 37deg 44deg, transparent 44deg 74deg,
+    rgba(61,0,102,.85) 74deg 81deg, transparent 81deg 111deg,
+    rgba(120,0,18,.75) 111deg 118deg,transparent 118deg 148deg,
+    rgba(61,0,102,.85) 148deg 155deg,transparent 155deg 185deg,
+    rgba(120,0,18,.75) 185deg 192deg,transparent 192deg 222deg,
+    rgba(61,0,102,.85) 222deg 229deg,transparent 229deg 259deg,
+    rgba(120,0,18,.75) 259deg 266deg,transparent 266deg 296deg,
+    rgba(61,0,102,.85) 296deg 303deg,transparent 303deg 333deg,
+    rgba(120,0,18,.75) 333deg 340deg,transparent 340deg 360deg
+  );
+  -webkit-mask:radial-gradient(circle,transparent 87.5%,black 88.5%);
+  mask:radial-gradient(circle,transparent 87.5%,black 88.5%);
+  animation:dkSpin 5.5s linear infinite reverse;
+  filter:drop-shadow(0 0 4px rgba(61,0,102,.65))}
+
+/* Ring 3 — Thin corruption arc */
+.r3{position:absolute;inset:-40px;border-radius:50%;
+  border-top:1.5px solid rgba(139,0,18,.5);
+  border-right:1.5px solid transparent;
+  border-bottom:1.5px solid rgba(61,0,102,.42);
+  border-left:1.5px solid transparent;
+  animation:dkSpin 8.5s linear infinite;
+  filter:drop-shadow(0 0 4px rgba(139,0,18,.3))}
+
+/* Ring 4 — Far dashed void */
+.r4{position:absolute;inset:-55px;border-radius:50%;
+  border:1px dashed rgba(74,0,128,.2);
+  animation:dkSpin 18s linear infinite reverse}
+
+/* Dark pulse rings (expand outward) */
+.rp1{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(139,0,18,.65);animation:dkPulse 3.2s ease-out infinite}
+.rp2{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(61,0,102,.5); animation:dkPulse 3.2s ease-out infinite .95s}
+.rp3{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(0,200,40,.12); animation:dkPulse 3.2s ease-out infinite 1.9s}
+
+/* Orbiting dark wisps */
+.ob1{position:absolute;inset:-47px;border-radius:50%;animation:dkSpin 2.5s linear infinite}
+.ob1::before{content:'';position:absolute;top:4px;left:50%;width:9px;height:9px;
+  border-radius:50%;transform:translateX(-50%);
+  background:radial-gradient(circle,#cc0022,#8b0000);
+  box-shadow:0 0 14px #8b0000,0 0 28px rgba(139,0,0,.75),0 0 48px rgba(139,0,0,.2)}
+
+.ob2{position:absolute;inset:-57px;border-radius:50%;animation:dkSpin 5s linear infinite reverse 1.3s}
+.ob2::before{content:'';position:absolute;bottom:4px;left:50%;width:7px;height:7px;
+  border-radius:50%;transform:translateX(-50%);
+  background:radial-gradient(circle,#9933ff,#4a0080);
+  box-shadow:0 0 11px #4a0080,0 0 24px rgba(74,0,128,.65),0 0 40px rgba(74,0,128,.2)}
+
+.ob3{position:absolute;inset:-65px;border-radius:50%;animation:dkSpin 9.5s linear infinite .5s}
+.ob3::before{content:'';position:absolute;top:50%;right:4px;width:5px;height:5px;
+  border-radius:50%;transform:translateY(-50%);
+  background:#001800;
+  box-shadow:0 0 10px #00ff41,0 0 20px rgba(0,255,65,.38),0 0 36px rgba(0,255,65,.1)}
+
+/* Dark rotating scan */
+.scan{position:absolute;inset:-15px;border-radius:50%;
+  background:conic-gradient(from 0deg,transparent 0%,rgba(139,0,18,.055) 13%,transparent 26%);
+  animation:dkSpin 5s linear infinite}
+
+/* Void void atmosphere behind avatar */
+.av-glow{position:absolute;inset:-70px;border-radius:50%;
+  background:radial-gradient(circle,
+    rgba(0,0,0,0) 0%,rgba(80,0,15,.15) 38%,rgba(30,0,55,.12) 58%,transparent 78%);
+  animation:voidBreath 4.5s ease-in-out infinite}
+
+/* Avatar image — dark corrupt border */
+.av-ring img{position:relative;z-index:3;width:100%;height:100%;border-radius:50%;
+  object-fit:cover;display:block;
+  border:2.5px solid rgba(139,0,18,.6);
+  box-shadow:
+    0 0 24px rgba(139,0,0,.5),
+    0 0 55px rgba(74,0,128,.2),
+    0 0 90px rgba(139,0,0,.08),
+    inset 0 0 28px rgba(0,0,0,.65);
+  filter:brightness(.9) saturate(1.12) contrast(1.06)}
+
+/* Cursed status dot (blood red) */
+.sdot{position:absolute;bottom:11px;right:11px;z-index:5;
+  width:13px;height:13px;background:#8b0000;
+  border-radius:50%;border:2px solid var(--bg);
+  box-shadow:0 0 10px #8b0000,0 0 22px rgba(139,0,0,.55);
+  animation:cursedPing 2.4s infinite}
+
+/* ═══ REST OF UI ═══ */
+.name{font-family:'Orbitron',sans-serif;font-size:clamp(22px,5vw,33px);font-weight:900;
+  letter-spacing:2px;text-align:center;animation:fup .6s .6s both}
+.name .r{color:var(--blood);text-shadow:0 0 22px var(--blood-glow),0 0 50px rgba(139,0,18,.2)}
+.name .p{color:var(--muted);margin:0 5px}
+.handle{font-size:12px;color:var(--muted);letter-spacing:3px;
+  margin-top:8px;margin-bottom:20px;animation:fup .6s .7s both}
+.bio{font-size:12px;color:rgba(200,200,240,.48);letter-spacing:1.5px;text-align:center;
+  max-width:340px;min-height:18px;margin-bottom:32px;animation:fup .6s .8s both}
+.cb{color:var(--blood);animation:blink 1s step-end infinite}
+.divl{width:90px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--blood),transparent);
+  margin-bottom:32px;animation:fup .6s .85s both}
+
+.links{display:flex;flex-direction:column;gap:11px;width:100%;max-width:315px;animation:fup .6s .9s both}
+.lb{position:relative;display:flex;align-items:center;gap:12px;padding:13px 18px;
+  background:var(--card);border:1px solid var(--border);border-radius:3px;
+  text-decoration:none;color:var(--text);font-family:'Share Tech Mono',monospace;
+  font-size:13px;letter-spacing:1px;overflow:hidden;
+  transition:border-color .25s,color .25s,transform .25s,box-shadow .25s}
+.lb::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:var(--blood);transform:scaleY(0);transition:transform .25s}
+.lb:hover::before{transform:scaleY(1)}
+.lb:hover{border-color:var(--blood);color:#fff;transform:translateX(5px);
+  box-shadow:0 0 22px rgba(139,0,18,.2)}
+.lb .ic{width:20px;text-align:center;font-size:16px}
+.lb .tx{flex:1}
+.lb .ar{font-size:11px;color:var(--muted);transition:color .25s,transform .25s}
+.lb:hover .ar{color:var(--blood);transform:translateX(3px)}
+.footer{margin-top:46px;font-size:9px;color:rgba(70,70,100,.35);
+  letter-spacing:3px;text-align:center;animation:fup .6s 1s both}
+
+/* ═══ MUSIC BAR ═══ */
+#mbar{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:20;
+  display:flex;align-items:center;gap:11px;
+  background:rgba(6,6,14,.96);border:1px solid rgba(139,0,18,.28);
+  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+  padding:9px 16px;border-radius:50px;min-width:250px;max-width:370px;
+  animation:fup .6s 1.1s both;
+  box-shadow:0 0 30px rgba(139,0,18,.1),inset 0 0 20px rgba(0,0,0,.5)}
+#mcov{width:32px;height:32px;border-radius:50%;object-fit:cover;
+  border:1px solid rgba(139,0,18,.35);flex-shrink:0;animation:spin 8s linear infinite paused}
+#mcov.spin{animation-play-state:running}
+#mbtn{width:28px;height:28px;border-radius:50%;border:1px solid rgba(139,0,18,.45);
+  background:rgba(139,0,18,.18);color:#cc0022;font-size:11px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;
+  transition:background .2s,box-shadow .2s;-webkit-tap-highlight-color:transparent}
+#mbtn:hover,#mbtn:active{background:rgba(139,0,18,.38);box-shadow:0 0 14px rgba(139,0,18,.55)}
+.mi{flex:1;min-width:0}
+.mt{font-size:11px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ma{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mbars{display:flex;align-items:flex-end;gap:2px;height:18px;flex-shrink:0}
+.mb{width:3px;background:#8b0012;border-radius:2px}
+.mb:nth-child(1){animation:mb1 .7s ease-in-out infinite alternate paused;height:4px}
+.mb:nth-child(2){animation:mb2 .5s ease-in-out infinite alternate paused;height:8px}
+.mb:nth-child(3){animation:mb3 .9s ease-in-out infinite alternate paused;height:5px}
+.mb:nth-child(4){animation:mb4 .6s ease-in-out infinite alternate paused;height:12px}
+.mb.p{animation-play-state:running!important}
+
+/* Cursor trail — dark red */
+.tr{position:fixed;border-radius:50%;background:#8b0000;
+  pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+
+/* ═══ ALL KEYFRAMES ═══ */
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes dkSpin{to{transform:rotate(360deg)}}
+@keyframes blink{50%{opacity:0}}
+@keyframes fup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pageIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cursedPing{
+  0%,100%{box-shadow:0 0 8px #8b0000,0 0 16px rgba(139,0,0,.4)}
+  50%{box-shadow:0 0 18px #8b0000,0 0 34px rgba(139,0,0,.75),0 0 55px rgba(139,0,0,.2)}}
+@keyframes dkPulse{
+  0%{transform:scale(1);opacity:.72}
+  100%{transform:scale(2.5);opacity:0}}
+@keyframes voidBreath{
+  0%,100%{opacity:.48;transform:scale(1)}
+  50%{opacity:.88;transform:scale(1.07)}}
+@keyframes avatarGlitch{
+  0%,88%,100%{filter:none;transform:none}
+  90%{filter:hue-rotate(18deg) brightness(1.12);transform:skewX(1.8deg) translateX(2px)}
+  92%{filter:hue-rotate(-12deg) brightness(.94);transform:skewX(-1.2deg) translateX(-2px)}
+  94%{filter:none;transform:none}
+  96%{filter:hue-rotate(8deg) saturate(1.2);transform:skewX(.6deg)}
+  98%{filter:none;transform:none}}
+@keyframes mb1{from{height:4px}to{height:16px}}
+@keyframes mb2{from{height:12px}to{height:5px}}
+@keyframes mb3{from{height:6px}to{height:18px}}
+@keyframes mb4{from{height:16px}to{height:4px}}
+@media(max-width:420px){.name{font-size:19px}.av-ring{width:130px;height:130px}}
+</style>
+</head>
+<body>
+
+<canvas id="cvs-bg"></canvas>
+<div id="anime-layer"></div>
+
+<div class="page">
+  <div class="lbl">// profile.init()</div>
+  <div class="av-wrap">
+    <div class="av-ring">
+      <div class="r3"></div><div class="r4"></div>
+      <div class="rp1"></div><div class="rp2"></div><div class="rp3"></div>
+      <div class="ob1"></div><div class="ob2"></div><div class="ob3"></div>
+      <div class="scan"></div><div class="av-glow"></div>
+      <img src="https://i.postimg.cc/0QvPx86z/7b844a5ee919a8cf18ad0b769019b54a.gif" alt="Phuc">
+      <div class="sdot"></div>
+    </div>
+  </div>
+  <h1 class="name"><span class="r">Nguyen Gia Phuc</span><span class="p">|</span>Obito</h1>
+  <div class="handle">@nguyengiaphuczzz</div>
+  <div class="bio" id="bio"></div>
+  <div class="divl"></div>
+  <div class="links">
+    <a class="lb" href="https://www.facebook.com/nguyengiaphuczzz" target="_blank" rel="noopener">
+      <span class="ic">📘</span><span class="tx">Facebook</span><span class="ar">→</span>
+    </a>
+  </div>
+  <div class="footer">NGUYEN GIA PHUC © 2026 — ALL RIGHTS RESERVED</div>
+</div>
+
+<div id="mbar">
+  <img id="mcov" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="">
+  <div id="mbtn" onclick="toggleMusic()">▶</div>
+  <div class="mi">
+    <div class="mt" id="mtt">Đang tải nhạc...</div>
+    <div class="ma" id="mat">🎵 Nhạc Remix Việt 2026</div>
+  </div>
+  <div class="mbars">
+    <div class="mb"></div><div class="mb"></div>
+    <div class="mb"></div><div class="mb"></div>
+  </div>
+</div>
+
+<audio id="aud" preload="auto" playsinline></audio>
+
+<script>
+/* ══════════════════════════════════════════
+   TYPEWRITER
+══════════════════════════════════════════ */
+const LINES=['Python Developer // Tool Builder','Obfuscation & Encryption Specialist','Termux  •  Android  •  Open Source'];
+let li=0,ci=0,del=false,w=0;
+const bioEl=document.getElementById('bio');
+function type(){
+  if(w>0){w--;return setTimeout(type,80)}
+  const l=LINES[li];
+  if(!del){ci++;bioEl.innerHTML=l.slice(0,ci)+'<span class="cb">_</span>';
+    if(ci===l.length){del=true;w=30}setTimeout(type,60)}
+  else{ci--;bioEl.innerHTML=l.slice(0,ci)+'<span class="cb">_</span>';
+    if(ci===0){del=false;li=(li+1)%LINES.length;w=6}setTimeout(type,28)}
+}
+setTimeout(type,900);
+
+/* ══════════════════════════════════════════
+   CANVAS — PARTICLES + REALISTIC SNOW + SHOOTING STARS
+══════════════════════════════════════════ */
+const cvsBg=document.getElementById('cvs-bg'),ctx=cvsBg.getContext('2d');
+let W=innerWidth,H=innerHeight;
+cvsBg.width=W;cvsBg.height=H;
+
+/* ── PARTICLES ── */
+const PTS=Array.from({length:65},()=>({
+  x:Math.random()*innerWidth,y:Math.random()*innerHeight,
+  vx:(Math.random()-.5)*.36,vy:(Math.random()-.5)*.36,
+  r:Math.random()*1.3+.3,a:Math.random()*.4+.08,
+  red:Math.random()<.25
+}));
+
+/* ── WIND ── */
+let windX=0,windTarget=0,windTimer=0,windGust=0;
+function tickWind(){
+  if(--windTimer<=0){
+    windTarget=(Math.random()-.5)*2.4;
+    windTimer=Math.floor(Math.random()*210+110);
+    if(Math.random()<.28){
+      windGust=(Math.random()-.5)*4.2;
+      setTimeout(()=>{windGust*=.3},420);
+      setTimeout(()=>{windGust=0},900);
+    }
+  }
+  windX+=(windTarget-windX)*.009;
+}
+
+/* ── REALISTIC 3-LAYER SNOW ── */
+function mkFlake(layer){
+  /* Per-layer config */
+  const C=[
+    {rb:.42,rv:.28,vy:.19,vyv:.1, dr:.07,al:.13,av:.07},
+    {rb:1.2,rv:.7, vy:.54,vyv:.24,dr:.16,al:.40,av:.18},
+    {rb:2.4,rv:1.0,vy:1.2,vyv:.5, dr:.32,al:.68,av:.24},
+  ][layer];
+  const r=C.rb+(Math.random()-.5)*C.rv;
+  return{
+    x:Math.random()*W, y:Math.random()*H,
+    r, layer,
+    vy:C.vy+(Math.random()-.5)*C.vyv,
+    drift:C.dr,
+    a:Math.max(.04, C.al+(Math.random()-.5)*C.av),
+    /* Primary sway */
+    ph:Math.random()*Math.PI*2,
+    phS:.006+Math.random()*.009,
+    /* Secondary sway for realism */
+    ph2:Math.random()*Math.PI*2,
+    ph2S:.003+Math.random()*.006,
+    /* Twinkling */
+    twink:Math.random()>.48,
+    twT:Math.random()*6.28,
+    twS:.011+Math.random()*.019,
+    /* Crystal rotation */
+    rot:Math.random()*Math.PI*2,
+    rotS:(Math.random()-.5)*.04,
+    /* Crystal or round */
+    crystal:layer===2&&Math.random()>.30,
+    arms:Math.random()>.5?6:4,
+  }
+}
+
+let SNOW_FAR=[],SNOW_MID=[],SNOW_NEAR=[];
+function rebuildSnow(){
+  SNOW_FAR =Array.from({length:100},()=>mkFlake(0));
+  SNOW_MID =Array.from({length:65}, ()=>mkFlake(1));
+  SNOW_NEAR=Array.from({length:32}, ()=>mkFlake(2));
+}
+rebuildSnow();
+
+function rsz(){
+  W=cvsBg.width=innerWidth;
+  H=cvsBg.height=innerHeight;
+  rebuildSnow();
+}
+window.addEventListener('resize',rsz);
+
+/* Draw hexagonal snowflake crystal */
+function drawCrystal(x,y,r,arms,rot,alpha){
+  const len=r*2.05;
+  ctx.save();
+  ctx.globalAlpha=alpha*.95;
+  ctx.translate(x,y);ctx.rotate(rot);
+  ctx.shadowColor='rgba(200,225,255,.52)';
+  ctx.shadowBlur=r*3;
+  ctx.strokeStyle=`rgba(218,238,255,${alpha})`;
+  ctx.lineWidth=.9;
+  const step=Math.PI*2/arms;
+  for(let i=0;i<arms;i++){
+    const a=i*step;
+    const ex=Math.cos(a)*len, ey=Math.sin(a)*len;
+    ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(ex,ey);ctx.stroke();
+    /* branches at 40% and 68% */
+    for(const t of [.40,.68]){
+      const bx=Math.cos(a)*len*t, by=Math.sin(a)*len*t;
+      const bl=len*.38, ba=.38*Math.PI;
+      ctx.beginPath();ctx.moveTo(bx,by);
+      ctx.lineTo(bx+Math.cos(a+ba)*bl,by+Math.sin(a+ba)*bl);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(bx,by);
+      ctx.lineTo(bx+Math.cos(a-ba)*bl,by+Math.sin(a-ba)*bl);ctx.stroke();
+    }
+  }
+  /* Center hexagon cap */
+  ctx.globalAlpha=alpha*.85;
+  ctx.fillStyle=`rgba(232,248,255,${alpha*.9})`;
+  ctx.beginPath();
+  for(let i=0;i<6;i++){
+    const a=i*Math.PI/3;
+    i===0?ctx.moveTo(Math.cos(a)*r*.52,Math.sin(a)*r*.52):
+           ctx.lineTo(Math.cos(a)*r*.52,Math.sin(a)*r*.52);
+  }
+  ctx.closePath();ctx.fill();
+  ctx.restore();
+}
+
+function updateFlake(s,dt){
+  s.ph +=s.phS *dt;
+  s.ph2+=s.ph2S*dt;
+  if(s.twink)s.twT+=s.twS*dt;
+  if(s.crystal)s.rot+=s.rotS*dt;
+  const wTotal=windX+(s.layer===2?windGust:(s.layer===1?windGust*.6:windGust*.3));
+  /* Dual sine drift for organic movement */
+  const swayX=Math.sin(s.ph)*s.drift*.28+Math.cos(s.ph2)*s.drift*.14;
+  const windPush=s.layer===2?wTotal*.55:(s.layer===1?wTotal*.35:wTotal*.18);
+  s.x+=swayX+windPush;
+  s.y+=s.vy*dt*(1+Math.abs(wTotal)*.07);
+  /* Wrap */
+  if(s.y>H+14){s.y=-12;s.x=Math.random()*W}
+  if(s.x<-16)s.x=W+16;
+  if(s.x>W+16)s.x=-16;
+}
+
+function drawFlake(s){
+  let alpha=s.a;
+  if(s.twink)alpha*=.62+.38*Math.sin(s.twT);
+  /* Fade near bottom for accumulation illusion */
+  const fz=H*.13;
+  if(s.y>H-fz)alpha*=Math.max(0,1-(s.y-(H-fz))/fz);
+  if(s.layer===0)alpha*=.82;
+  if(alpha<.01)return;
+
+  if(s.crystal){
+    drawCrystal(s.x,s.y,s.r,s.arms,s.rot,alpha);
+  } else {
+    ctx.save();
+    ctx.globalAlpha=alpha;
+    if(s.r>1){ctx.shadowColor='rgba(200,225,255,.5)';ctx.shadowBlur=s.r*2.8}
+    /* Slight blue-white tint realism */
+    const tint=s.layer===0?`rgba(208,222,255,${alpha})`:`rgba(222,238,255,${alpha})`;
+    ctx.fillStyle=tint;
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  }
+}
+
+/* ── SHOOTING STARS ── */
+const SSTARS=[];
+function spawnSStar(){
+  SSTARS.push({
+    x:Math.random()<.5?0:Math.random()*W*.5,
+    y:Math.random()<.5?0:Math.random()*H*.3,
+    spd:Math.random()*10+7,
+    ang:Math.PI*.22+Math.random()*.16,
+    a:1, trail:[]
+  });
+}
+setInterval(()=>{if(Math.random()<.5)spawnSStar()},2600);
+
+/* ── MAIN RENDER LOOP ── */
+let lastT=0;
+function drawAll(ts){
+  const dt=Math.min((ts-lastT)/16.6,3);lastT=ts;
+  ctx.clearRect(0,0,W,H);
+
+  /* Nebula background */
+  const n1=ctx.createRadialGradient(W*.12,H*.24,0,W*.12,H*.24,W*.44);
+  n1.addColorStop(0,'rgba(90,0,12,.09)');n1.addColorStop(1,'transparent');
+  ctx.fillStyle=n1;ctx.fillRect(0,0,W,H);
+  const n2=ctx.createRadialGradient(W*.84,H*.7,0,W*.84,H*.7,W*.38);
+  n2.addColorStop(0,'rgba(35,0,75,.1)');n2.addColorStop(1,'transparent');
+  ctx.fillStyle=n2;ctx.fillRect(0,0,W,H);
+
+  /* Particles + connections */
+  for(const p of PTS){
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.red?`rgba(160,0,18,${p.a})`:`rgba(120,128,210,${p.a})`;
+    ctx.fill();
+  }
+  for(let i=0;i<PTS.length;i++)for(let j=i+1;j<PTS.length;j++){
+    const dx=PTS[i].x-PTS[j].x,dy=PTS[i].y-PTS[j].y,d=dx*dx+dy*dy;
+    if(d<6400){const dd=Math.sqrt(d);
+      ctx.beginPath();ctx.moveTo(PTS[i].x,PTS[i].y);ctx.lineTo(PTS[j].x,PTS[j].y);
+      ctx.strokeStyle=`rgba(130,0,15,${.058*(1-dd/80)})`;ctx.lineWidth=.5;ctx.stroke();}
+  }
+
+  tickWind();
+
+  /* Ground mist layer */
+  const mist=ctx.createLinearGradient(0,H*.82,0,H);
+  mist.addColorStop(0,'transparent');
+  mist.addColorStop(1,'rgba(205,220,255,.038)');
+  ctx.fillStyle=mist;ctx.fillRect(0,H*.82,W,H*.18);
+
+  /* Snow — far → near (depth order) */
+  for(const s of SNOW_FAR) {updateFlake(s,dt);drawFlake(s)}
+  for(const s of SNOW_MID) {updateFlake(s,dt);drawFlake(s)}
+  for(const s of SNOW_NEAR){updateFlake(s,dt);drawFlake(s)}
+
+  /* Snow accumulation hint at very bottom */
+  const pile=ctx.createLinearGradient(0,H-18,0,H);
+  pile.addColorStop(0,'transparent');
+  pile.addColorStop(.35,'rgba(218,235,255,.045)');
+  pile.addColorStop(1,'rgba(218,235,255,.1)');
+  ctx.fillStyle=pile;ctx.fillRect(0,H-18,W,18);
+
+  /* Shooting stars */
+  for(let i=SSTARS.length-1;i>=0;i--){
+    const s=SSTARS[i];
+    s.trail.push({x:s.x,y:s.y});
+    if(s.trail.length>28)s.trail.shift();
+    s.x+=Math.cos(s.ang)*s.spd*dt;
+    s.y+=Math.sin(s.ang)*s.spd*dt;
+    s.a-=.02;
+    if(s.a<=0||s.x>W+25||s.y>H+25){SSTARS.splice(i,1);continue}
+    ctx.save();
+    for(let k=1;k<s.trail.length;k++){
+      const prog=k/s.trail.length;
+      ctx.strokeStyle=`rgba(255,248,210,${s.a*prog*.9})`;
+      ctx.lineWidth=prog*2.2;
+      ctx.shadowColor='rgba(255,245,185,.72)';ctx.shadowBlur=8;
+      ctx.beginPath();ctx.moveTo(s.trail[k-1].x,s.trail[k-1].y);
+      ctx.lineTo(s.trail[k].x,s.trail[k].y);ctx.stroke();
+    }
+    const hg=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,6);
+    hg.addColorStop(0,`rgba(255,252,230,${s.a})`);hg.addColorStop(1,'transparent');
+    ctx.fillStyle=hg;ctx.beginPath();ctx.arc(s.x,s.y,6,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  }
+  requestAnimationFrame(drawAll);
+}
+requestAnimationFrame(drawAll);
+
+/* ══════════════════════════════════════════
+   ANIME IMAGES
+══════════════════════════════════════════ */
+const SLOTS=[
+  {x:'1%', y:'5%', s:135},{x:'0%', y:'46%',s:125},{x:'2%', y:'78%',s:118},
+  {x:'80%',y:'4%', s:135},{x:'82%',y:'46%',s:125},{x:'79%',y:'76%',s:120},
+];
+let gifEls=[];
+function placeImgs(urls){
+  const lay=document.getElementById('anime-layer');
+  lay.innerHTML='';gifEls=[];
+  urls.forEach((url,i)=>{
+    if(i>=SLOTS.length)return;
+    const s=SLOTS[i];
+    const img=document.createElement('img');
+    img.className='agif';
+    img.style.cssText=`left:${s.x};top:${s.y};width:${s.s}px;height:${s.s}px`;
+    img.src=url;lay.appendChild(img);gifEls.push(img);
+    setTimeout(()=>img.classList.add('show'),300+i*390);
+  });
+}
+async function loadImages(){
+  const sources=[
+    ()=>fetch('https://nekos.best/api/v2/neko?amount=6').then(r=>r.json()).then(d=>d.results.map(x=>x.url)),
+    ()=>fetch('https://nekos.best/api/v2/kitsune?amount=6').then(r=>r.json()).then(d=>d.results.map(x=>x.url)),
+    ()=>Promise.all(Array.from({length:6},()=>fetch('https://api.waifu.pics/sfw/waifu').then(r=>r.json()).then(d=>d.url))),
+  ];
+  for(const src of sources){
+    try{const urls=await src();if(urls&&urls.length>=3){placeImgs(urls.filter(Boolean));break}}catch(e){}
+  }
+  setTimeout(async function ref(){
+    gifEls.forEach(g=>g.classList.remove('show'));
+    await new Promise(r=>setTimeout(r,2400));
+    await loadImages();
+  },22000);
+}
+loadImages();
+
+/* ══════════════════════════════════════════
+   MUSIC — AGGRESSIVE AUTOPLAY (NO INTERACTION NEEDED)
+══════════════════════════════════════════ */
+const aud =document.getElementById('aud');
+const mbtn=document.getElementById('mbtn');
+const mtt =document.getElementById('mtt');
+const mat =document.getElementById('mat');
+const mcov=document.getElementById('mcov');
+const mbs =document.querySelectorAll('.mb');
+let playlist=[],pidx=0,isPlaying=false,audioCtx=null,mediaNode=null;
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=0|Math.random()*(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
+
+const FALLBACK=[
+  {title:'Đừng Làm Trái Tim Anh Đau Remix',artist:'Trung Hiếu Remix',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'},
+  {title:'Yêu Một Người Có Lẽ (Remix 2026)',artist:'NhacRemixViet',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'},
+  {title:'Tình Yêu Màu Nắng Remix',artist:'DJ Mix Official',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'},
+  {title:'Chạy Ngay Đi Remix 2026',artist:'Việt Mix Hot',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3'},
+  {title:'Hoa Nở Không Màu Remix',artist:'Remix Việt Nam',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3'},
+  {title:'Nhạc Trẻ Remix Đặc Sắc 2026',artist:'DJ Trung',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3'},
+];
+
+/* ── AudioContext unlock — bypasses browser autoplay policy ── */
+function initAudioCtx(){
+  if(audioCtx)return;
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC)return;
+    audioCtx=new AC();
+    /* Fire silent 1-sample buffer to trigger permission */
+    const buf=audioCtx.createBuffer(1,1,22050);
+    const src=audioCtx.createBufferSource();
+    src.buffer=buf;src.connect(audioCtx.destination);src.start(0);
+    audioCtx.resume();
+    /* Bridge audio element into AudioContext graph */
+    if(!mediaNode){
+      try{mediaNode=audioCtx.createMediaElementSource(aud);mediaNode.connect(audioCtx.destination)}catch(e){}
+    }
+  }catch(e){audioCtx=null}
+}
+
+/* Try AudioContext unlock as soon as script runs */
+initAudioCtx();
+
+/* Re-attempt on ANY user interaction (belt + suspenders) */
+['touchstart','touchend','click','scroll','keydown','pointerdown'].forEach(ev=>
+  document.addEventListener(ev,()=>{
+    initAudioCtx();
+    if(audioCtx?.state==='suspended')audioCtx.resume();
+    /* If playlist loaded but not yet playing, auto-start */
+    if(playlist.length&&!isPlaying){
+      aud.muted=false;
+      aud.play().then(()=>setPlaying(true)).catch(()=>{});
+    }
+  },{passive:true})
+);
+
+/* Fetch Vietnamese tracks via Deezer + CORS proxy */
+async function fetchDeezer(query){
+  const api=`https://api.deezer.com/search/track?q=${encodeURIComponent(query)}&order=RANKING&limit=20`;
+  const proxies=['https://corsproxy.io/?','https://api.allorigins.win/raw?url='];
+  for(const px of proxies){
+    try{
+      const r=await fetch(px+encodeURIComponent(api),{signal:AbortSignal.timeout(6000)});
+      if(!r.ok)continue;
+      const d=await r.json();
+      if(!d.data?.length)continue;
+      return d.data.filter(t=>t.preview).map(t=>({
+        title:t.title_short||t.title,
+        artist:t.artist.name,
+        url:t.preview,
+        cover:t.album?.cover_small
+      }));
+    }catch(e){}
+  }
+  return[];
+}
+
+function setTrackUI(t){
+  mtt.textContent=t.title;mat.textContent=t.artist;
+  if(t.cover&&t.cover.length>10&&!t.cover.includes('1x1'))mcov.src=t.cover;
+}
+function setPlaying(v){
+  isPlaying=v;mbtn.textContent=v?'⏸':'▶';
+  if(v){mcov.classList.add('spin');mbs.forEach(b=>b.classList.add('p'))}
+  else{mcov.classList.remove('spin');mbs.forEach(b=>b.classList.remove('p'))}
+}
+
+async function tryPlay(){
+  if(!playlist.length)return;
+  const t=playlist[pidx];
+  aud.src=t.url;aud.volume=.62;
+  setTrackUI(t);
+
+  /* Ensure AudioContext is running */
+  initAudioCtx();
+  if(audioCtx)try{await audioCtx.resume()}catch(e){}
+
+  /* Strategy A — direct unmuted play */
+  try{aud.muted=false;await aud.play();setPlaying(true);return}catch(_){}
+
+  /* Strategy B — muted play → instant unmute (always allowed) */
+  try{
+    aud.muted=true;
+    await aud.play();
+    aud.muted=false;
+    setPlaying(true);return;
+  }catch(_){}
+
+  /* Strategy C — retry via AudioContext bridge */
+  if(audioCtx?.state==='running'){
+    try{aud.muted=false;await aud.play();setPlaying(true);return}catch(_){}
+  }
+
+  /* Strategy D — wait for any physical interaction */
+  mat.textContent='🔴 Chạm màn hình để phát nhạc';
+  const resume=async()=>{
+    initAudioCtx();
+    if(audioCtx)try{await audioCtx.resume()}catch(e){}
+    try{aud.muted=false;await aud.play();setPlaying(true);mat.textContent=t.artist}catch(_){}
+  };
+  ['click','touchstart','touchend','scroll','keydown','pointerdown']
+    .forEach(ev=>document.addEventListener(ev,resume,{once:true,passive:true}));
+}
+
+async function startMusic(){
+  mtt.textContent='🔍 Đang tải nhạc Việt...';
+  let tracks=[];
+  const queries=['nhac remix viet 2026','viet remix hay nhat','nhac tre remix 2026'];
+  for(const q of queries){
+    if(tracks.length>=14)break;
+    tracks=[...tracks,...await fetchDeezer(q)];
+  }
+  const seen=new Set();
+  tracks=tracks.filter(t=>{if(seen.has(t.url))return false;seen.add(t.url);return true});
+  playlist=shuffle(tracks.length>=4?tracks:FALLBACK);
+  pidx=0;
+  await tryPlay();
+}
+
+aud.addEventListener('ended',async()=>{
+  pidx=(pidx+1)%playlist.length;
+  const t=playlist[pidx];
+  aud.src=t.url;setTrackUI(t);
+  try{await aud.play();setPlaying(true)}catch(_){setPlaying(false)}
+});
+
+function toggleMusic(){
+  if(!playlist.length)return;
+  if(isPlaying){aud.pause();setPlaying(false)}
+  else{
+    initAudioCtx();
+    if(audioCtx)audioCtx.resume();
+    aud.play().then(()=>setPlaying(true)).catch(()=>{});
+  }
+}
+
+if(document.readyState==='loading')
+  document.addEventListener('DOMContentLoaded',startMusic);
+else startMusic();
+
+/* ══════════════════════════════════════════
+   CURSOR TRAIL
+══════════════════════════════════════════ */
+const TN=10,tels=Array.from({length:TN},(_,i)=>{
+  const d=document.createElement('div');d.className='tr';
+  const s=5-i*.35;d.style.width=s+'px';d.style.height=s+'px';
+  document.body.appendChild(d);return{el:d,x:0,y:0};
+});
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function tloop(){
+  let px=mx,py=my;
+  tels.forEach((t,i)=>{
+    const lx=t.x,ly=t.y;t.x=px;t.y=py;
+    t.el.style.left=lx+'px';t.el.style.top=ly+'px';
+    t.el.style.opacity=((TN-i)/TN)*.65;
+    px=lx;py=ly;
+  });
+  requestAnimationFrame(tloop);
+})();
+</script>
+</body>
+  </html>
